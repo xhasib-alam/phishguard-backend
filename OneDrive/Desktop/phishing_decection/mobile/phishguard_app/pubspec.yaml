@@ -1,0 +1,38 @@
+name: phishguard_app
+description: Flutter Android client for the PhishGuard cybersecurity platform.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.2
+  shared_preferences: ^2.2.3
+  path_provider: ^2.1.4
+  share_plus: ^10.0.2
+  open_filex: ^4.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.1
+  flutter_native_splash: ^2.4.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icon/phishguard_icon.png
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icon/phishguard_icon.png"
+
+flutter_native_splash:
+  color: "#05070D"
+  image: assets/icon/phishguard_icon.png
+  android: true

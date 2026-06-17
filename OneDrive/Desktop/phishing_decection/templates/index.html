@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishGuard Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="console-layout">
+        <aside class="sidebar">
+            <a class="brand-block" href="#overview" aria-label="PhishGuard">
+                <span class="brand-logo">PG</span>
+                <span>
+                    <strong>PhishGuard</strong>
+                    <small>Threat Intelligence SaaS</small>
+                </span>
+            </a>
+            <nav class="side-nav" aria-label="Console navigation">
+                <a href="#overview">Overview</a>
+                <a href="#scanner">URL Scanner</a>
+                <a href="#email-analyzer">Email Analyzer</a>
+                <a href="#bulk-scanner">Bulk Scanner</a>
+                <a href="#model-dashboard">ML Performance</a>
+                <a href="#history">History</a>
+                <a href="#developer">Developer API</a>
+            </nav>
+            <div class="sidebar-card">
+                <span class="signal-dot"></span>
+                <strong id="api-health">API Online</strong>
+                <small id="model-health">Model status loading</small>
+            </div>
+        </aside>
+
+        <main class="command-center">
+            <section class="command-hero" id="overview">
+                <div>
+                    <p class="eyebrow">Commercial Cyber Defense Console</p>
+                    <h1>Phishing intelligence for web, mobile, and browser extension clients.</h1>
+                    <p class="subtitle">Scan URLs, emails, and batches with explainable AI, domain intelligence, SSL checks, report exports, and mobile-ready APIs.</p>
+                </div>
+                <div class="hero-metrics">
+                    <div><span>Total Scans</span><strong id="total-scans">0</strong></div>
+                    <div><span>Threats</span><strong id="live-threat-counter">0</strong></div>
+                    <div><span>Model F1</span><strong id="hero-f1">0.92</strong></div>
+                </div>
+            </section>
+
+            <section class="auth-strip">
+                <div>
+                    <p class="eyebrow">Identity Layer</p>
+                    <h2>JWT-ready user access</h2>
+                </div>
+                <input id="auth-name" placeholder="Name" autocomplete="name">
+                <input id="auth-email" placeholder="Email" autocomplete="email">
+                <input id="auth-password" placeholder="Password" type="password" autocomplete="current-password">
+                <button class="secondary-button" id="register-btn" type="button">Register</button>
+                <button class="primary-button" id="login-btn" type="button">Login</button>
+                <span id="auth-status">Guest mode</span>
+            </section>
+
+            <section class="grid-two">
+                <article class="panel scanner-card" id="scanner">
+                    <div class="panel-heading">
+                        <div>
+                            <p class="eyebrow">URL Intelligence</p>
+                            <h2>Real-Time URL Scanner</h2>
+                        </div>
+                        <span class="live-dot" id="live-status">Idle</span>
+                    </div>
+                    <label class="input-label" for="url-input">Target URL</label>
+                    <div class="url-row">
+                        <input id="url-input" type="url" placeholder="https://example.com/login" autocomplete="off" spellcheck="false">
+                        <button class="primary-button" id="check-btn" type="button"><span>Scan URL</span></button>
+                    </div>
+                    <div class="action-row">
+                        <button class="secondary-button" id="paste-btn" type="button">Paste</button>
+                        <button class="secondary-button" id="sample-safe-btn" type="button">Safe Sample</button>
+                        <button class="secondary-button danger-soft" id="sample-phish-btn" type="button">Threat Sample</button>
+                    </div>
+                    <div class="loading" id="loading" aria-live="polite">
+                        <span class="loader"></span>
+                        <span>Running ML, reputation, SSL, redirect, and domain intelligence checks...</span>
+                    </div>
+                    <div class="error-box" id="error-section" role="alert">
+                        <strong>Console Alert</strong>
+                        <span id="error-message"></span>
+                    </div>
+                </article>
+
+                <article class="panel result-card" id="result-section">
+                    <div class="result-top">
+                        <div>
+                            <span class="verdict-badge safe" id="verdict-text">READY</span>
+                            <h2 id="domain-title">No target scanned</h2>
+                            <p id="recommendation-value">Enter a URL to generate a full threat intelligence report.</p>
+                        </div>
+                        <div class="risk-ring" id="risk-ring" style="--risk: 0">
+                            <div>
+                                <strong id="confidence-value">0%</strong>
+                                <span>Confidence</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="meter"><span id="risk-bar"></span></div>
+                    <div class="metric-grid">
+                        <div class="metric"><span>Risk Score</span><strong id="risk-value">0/100</strong></div>
+                        <div class="metric"><span>Risk Level</span><strong id="risk-level-value">LOW</strong></div>
+                        <div class="metric"><span>Detection Source</span><strong id="source-value">-</strong></div>
+                        <div class="metric domain-metric"><span>Domain</span><strong><img id="favicon" alt=""> <span id="favicon-domain">-</span></strong></div>
+                        <div class="metric"><span>SSL Status</span><strong id="ssl-value">Not checked</strong></div>
+                        <div class="metric"><span>Redirects</span><strong id="redirect-value">Not checked</strong></div>
+                    </div>
+                    <div class="domain-info">
+                        <div><span>Registrar</span><strong id="registrar-value">Not available</strong></div>
+                        <div><span>Country</span><strong id="country-value">Not available</strong></div>
+                        <div><span>Domain Age</span><strong id="domain-age-value">Not available</strong></div>
+                        <div><span>Timestamp</span><strong id="timestamp-value">-</strong></div>
+                    </div>
+                    <div class="report-actions">
+                        <button class="primary-button" id="export-pdf-btn" type="button">Download PDF</button>
+                        <button class="secondary-button" id="share-report-btn" type="button">Share Report</button>
+                    </div>
+                </article>
+            </section>
+
+            <section class="grid-three">
+                <article class="panel">
+                    <p class="eyebrow">Findings</p>
+                    <h2>Explainable AI Output</h2>
+                    <ul class="analysis-list" id="analysis-list"></ul>
+                </article>
+                <article class="panel">
+                    <p class="eyebrow">Response</p>
+                    <h2>Recommended Actions</h2>
+                    <ul class="analysis-list" id="actions-list"></ul>
+                </article>
+                <article class="panel">
+                    <p class="eyebrow">Feature Signals</p>
+                    <h2>URL Telemetry</h2>
+                    <div class="feature-grid">
+                        <div><span>Length</span><strong id="feature-length">0</strong></div>
+                        <div><span>Subdomains</span><strong id="feature-subdomains">0</strong></div>
+                        <div><span>ML Probability</span><strong id="ml-probability-value">0%</strong></div>
+                        <div><span>ML Confidence</span><strong id="ml-confidence-value">0%</strong></div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="grid-two">
+                <article class="panel" id="email-analyzer">
+                    <div class="panel-heading">
+                        <div>
+                            <p class="eyebrow">Email Defense</p>
+                            <h2>Email Phishing Analyzer</h2>
+                        </div>
+                        <button class="secondary-button" id="email-analyze-btn" type="button">Analyze Email</button>
+                    </div>
+                    <textarea id="email-content" placeholder="Paste suspicious email headers or message content here..."></textarea>
+                    <div class="analysis-result" id="email-result">Email analysis results will appear here.</div>
+                </article>
+
+                <article class="panel" id="bulk-scanner">
+                    <div class="panel-heading">
+                        <div>
+                            <p class="eyebrow">Batch Operations</p>
+                            <h2>Bulk URL Scanner</h2>
+                        </div>
+                        <button class="secondary-button" id="bulk-scan-btn" type="button">Run Batch</button>
+                    </div>
+                    <textarea id="bulk-content" placeholder="Paste one URL per line for CSV-style batch scanning..."></textarea>
+                    <div class="bulk-results" id="bulk-results">Batch scan results will appear here.</div>
+                </article>
+            </section>
+
+            <section class="grid-two">
+                <article class="panel" id="model-dashboard">
+                    <p class="eyebrow">Machine Learning</p>
+                    <h2>Model Performance Dashboard</h2>
+                    <div class="model-grid">
+                        <div><span>Accuracy</span><strong id="metric-accuracy">-</strong></div>
+                        <div><span>Precision</span><strong id="metric-precision">-</strong></div>
+                        <div><span>Recall</span><strong id="metric-recall">-</strong></div>
+                        <div><span>F1 Score</span><strong id="metric-f1">-</strong></div>
+                        <div><span>ROC-AUC</span><strong id="metric-auc">-</strong></div>
+                        <div><span>Version</span><strong id="metric-version">-</strong></div>
+                    </div>
+                    <pre id="confusion-matrix">Confusion matrix loading...</pre>
+                </article>
+
+                <article class="panel" id="history">
+                    <div class="panel-heading">
+                        <div>
+                            <p class="eyebrow">Database History</p>
+                            <h2>Scan History & Analytics</h2>
+                        </div>
+                        <button class="secondary-button" id="refresh-history-btn" type="button">Refresh</button>
+                    </div>
+                    <input id="history-search" class="history-search" type="search" placeholder="Search database-backed scan history">
+                    <div class="stats-grid">
+                        <div class="stat"><span>Safe</span><strong id="safe-scans">0</strong></div>
+                        <div class="stat"><span>Suspicious</span><strong id="suspicious-scans">0</strong></div>
+                        <div class="stat"><span>Phishing</span><strong id="phishing-scans">0</strong></div>
+                    </div>
+                    <div class="history-list" id="history-list"></div>
+                </article>
+            </section>
+
+            <section class="panel developer-panel" id="developer">
+                <div>
+                    <p class="eyebrow">Mobile & Extension Ready</p>
+                    <h2>Versioned API Surface</h2>
+                </div>
+                <div class="api-grid">
+                    <code>POST /api/v1/auth/register</code>
+                    <code>POST /api/v1/auth/login</code>
+                    <code>POST /api/v1/scan</code>
+                    <code>GET /api/v1/history</code>
+                    <code>POST /api/v1/reports/pdf</code>
+                    <code>POST /api/v1/email/analyze</code>
+                    <code>POST /api/v1/bulk-scan</code>
+                    <code>GET /api/v1/admin/overview</code>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

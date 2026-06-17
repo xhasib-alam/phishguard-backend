@@ -1,0 +1,17 @@
+services:
+  phishguard:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      FLASK_ENV: production
+      SECRET_KEY: change-this-in-production
+      DATABASE_URL: sqlite:///instance/phishguard.db
+      CORS_ORIGINS: "*"
+      ENABLE_REDIRECT_ANALYSIS: "true"
+      ENABLE_SSL_VERIFICATION: "true"
+    volumes:
+      - phishguard-data:/app/instance
+
+volumes:
+  phishguard-data:
